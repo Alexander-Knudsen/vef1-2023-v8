@@ -25,16 +25,17 @@ const products = [
 /** Bæta vöru í körfu */
 function addProductToCart(product, quantity) {
   // Hér þarf að finna `<tbody>` í töflu og setja `cartLine` inn í það
-  const cart = document.querySelector('.cart-content');
+  const cartTableBodyElement = document.querySelector('.cart table tbody');
+  console.log('cartTableBodyElement :>>', cartTableBodyElement)
 
-  if (!cart) {
-    console.warn('fann ekki .cart');
+  if (!cartTableBodyElement) {
+    console.warn('fann ekki .cart table');
     return;
   }
   
   // TODO hér þarf að athuga hvort lína fyrir vöruna sé þegar til
   const cartLine = createCartLine(product, quantity);
-  cart.appendChild(cartLine);
+  cartTableBodyElement.appendChild(cartLine);
 
   // Sýna efni körfu
   showCartContent(true);
@@ -47,13 +48,17 @@ function submitHandler(event) {
   event.preventDefault();
   
   // Finnum næsta element sem er `<tr>`
-  const parent = event.target.closest('tr')
+  const parent = event.target.closest('tr');
 
   // Það er með attribute sem tiltekur auðkenni vöru, t.d. `data-product-id="1"`
   const productId = Number.parseInt(parent.dataset.productId);
 
   // Finnum vöru með þessu productId
   const product = products.find((i) => i.id === productId);
+
+  if (!product) {
+    return;
+  }
 
   // TODO hér þarf að finna fjölda sem á að bæta við körfu með því að athuga
   // á input
